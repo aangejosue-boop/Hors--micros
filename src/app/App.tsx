@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { supabase, type MessageRow } from "@/lib/supabase";
 import Quiz from "./components/Quiz";
 import OnboardingTips from "./components/OnboardingTips";
+import QuoteOfTheDay from "./components/QuoteOfTheDay";
 
 const TAGS = [
   { id: "all", label: "Tout" },
@@ -270,6 +271,7 @@ export default function App() {
 
       {/* Feed */}
       <main className="max-w-2xl mx-auto px-4 py-6 space-y-4">
+        <QuoteOfTheDay />
         <OnboardingTips />
         <AnimatePresence initial={false}>
           {filtered.map((post, i) => (
