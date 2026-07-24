@@ -237,50 +237,52 @@ export default function App() {
       className="min-h-screen bg-background text-foreground"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1
-              className="text-2xl font-semibold tracking-tight"
-              style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic" }}
-            >
-              Hors Micro
-            </h1>
-            <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-              <Shield className="w-3 h-3" />
-              Espace anonyme et bienveillant
-            </p>
+      {/* Header + tag filter, sticky as one block so nothing has to guess the header's height */}
+      <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
+        <header>
+          <div className="max-w-2xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h1
+                className="text-xl sm:text-2xl font-semibold tracking-tight truncate"
+                style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic" }}
+              >
+                Hors Micro
+              </h1>
+              <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1 truncate">
+                <Shield className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">Espace anonyme et bienveillant</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+              <button
+                onClick={toggleTheme}
+                aria-label={isDark ? "Activer le thème jour" : "Activer le thème nuit"}
+                className="flex items-center justify-center bg-secondary text-foreground w-9 h-9 rounded-full hover:opacity-90 transition-opacity flex-shrink-0"
+              >
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              <button
+                onClick={() => setQuizOpen(true)}
+                aria-label="Quiz"
+                className="flex items-center gap-2 bg-secondary text-foreground px-2.5 sm:px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity flex-shrink-0"
+              >
+                <Brain className="w-4 h-4" />
+                <span className="hidden sm:inline">Quiz</span>
+              </button>
+              <button
+                onClick={() => setComposeOpen(true)}
+                aria-label="Écrire"
+                className="flex items-center gap-2 bg-primary text-primary-foreground px-2.5 sm:px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity flex-shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="hidden sm:inline">Écrire</span>
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              aria-label={isDark ? "Activer le thème jour" : "Activer le thème nuit"}
-              className="flex items-center justify-center bg-secondary text-foreground w-9 h-9 rounded-full hover:opacity-90 transition-opacity"
-            >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-            <button
-              onClick={() => setQuizOpen(true)}
-              className="flex items-center gap-2 bg-secondary text-foreground px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              <Brain className="w-4 h-4" />
-              Quiz
-            </button>
-            <button
-              onClick={() => setComposeOpen(true)}
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              <Plus className="w-4 h-4" />
-              Écrire
-            </button>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Tag filter */}
-      <div className="sticky top-[73px] z-30 bg-background/90 backdrop-blur-md border-b border-border">
-        <div className="max-w-2xl mx-auto px-4">
+        {/* Tag filter */}
+        <div className="max-w-2xl mx-auto px-3 sm:px-4">
           <div className="flex gap-2 overflow-x-auto py-3 scrollbar-hide">
             {TAGS.map((tag) => (
               <button
