@@ -9,7 +9,16 @@
       <meta name="description" content="Allows students to anonymously share messages about their environment and experiences, fostering open and honest communication in a safe space." />
       <meta name="robots" content="noindex, nofollow" />
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-      
+      <script>
+        (function () {
+          try {
+            var stored = localStorage.getItem("hors-micro-theme");
+            var isDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+            document.documentElement.classList.toggle("dark", isDark);
+          } catch (e) {}
+        })();
+      </script>
+
     </head>
 
     <body>

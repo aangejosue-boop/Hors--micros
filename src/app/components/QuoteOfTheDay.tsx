@@ -20,7 +20,7 @@ export default function QuoteOfTheDay() {
   return (
     <div className="bg-card rounded-2xl border border-border p-5 mb-4 overflow-hidden">
       <div className="flex items-start gap-3">
-        <QuoteIcon className="w-4 h-4 text-primary flex-shrink-0 mt-1" />
+        <QuoteIcon className="w-4 h-4 text-accent-gold flex-shrink-0 mt-1" />
         <div className="flex-1 min-w-0">
           <div className="relative">
             <AnimatePresence mode="wait" custom={direction}>
@@ -70,7 +70,7 @@ export default function QuoteOfTheDay() {
                   }}
                   aria-label={`Citation ${i + 1}`}
                   className={`rounded-full transition-all ${
-                    i === index ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-secondary"
+                    i === index ? "w-4 h-1.5 bg-accent-gold" : "w-1.5 h-1.5 bg-secondary"
                   }`}
                 />
               ))}

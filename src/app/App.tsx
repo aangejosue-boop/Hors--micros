@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Heart, MessageCircle, Flame, Shield, ChevronDown, X, Plus, Brain } from "lucide-react";
+import { Send, Heart, MessageCircle, Flame, Shield, ChevronDown, X, Plus, Brain, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { supabase, type MessageRow } from "@/lib/supabase";
 import { isContentAllowed, MODERATION_WARNING } from "@/lib/moderation";
@@ -19,11 +19,11 @@ const TAGS = [
 ];
 
 const CARD_ACCENTS = [
-  "border-l-[#e8a84a]",
-  "border-l-[#7c6af5]",
-  "border-l-[#5dbea3]",
-  "border-l-[#e8607a]",
-  "border-l-[#62b5e5]",
+  "border-l-accent-gold",
+  "border-l-accent-violet",
+  "border-l-accent-mint",
+  "border-l-accent-rose",
+  "border-l-accent-sky",
 ];
 
 type Reaction = { heart: number; fire: number; hug: number };
@@ -52,6 +52,7 @@ function randomAlias() {
 }
 
 const REACTED_STORAGE_KEY = "hors-micro-reactions";
+const THEME_STORAGE_KEY = "hors-micro-theme";
 
 function loadReactedMap(): Record<number, keyof Reaction> {
   try {
@@ -84,6 +85,7 @@ export default function App() {
   const [charCount, setCharCount] = useState(0);
   const [moderationError, setModerationError] = useState<string | null>(null);
   const [reactedMap, setReactedMap] = useState<Record<number, keyof Reaction>>({});
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const seenIds = useRef<Set<number>>(new Set());
   const MAX = 500;
@@ -93,6 +95,13 @@ export default function App() {
       textareaRef.current.focus();
     }
   }, [composeOpen]);
+
+  function toggleTheme() {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
+  }
 
   useEffect(() => {
     const reacted = loadReactedMap();
@@ -245,6 +254,13 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={toggleTheme}
+              aria-label={isDark ? "Activer le thème jour" : "Activer le thème nuit"}
+              className="flex items-center justify-center bg-secondary text-foreground w-9 h-9 rounded-full hover:opacity-90 transition-opacity"
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
               onClick={() => setQuizOpen(true)}
               className="flex items-center gap-2 bg-secondary text-foreground px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
             >
@@ -336,21 +352,21 @@ export default function App() {
                   icon={<Heart className="w-4 h-4" />}
                   count={post.reactions.heart}
                   active={post.reacted === "heart"}
-                  activeColor="text-[#e8607a]"
+                  activeColor="text-accent-rose"
                   onClick={() => toggleReaction(post.id, "heart")}
                 />
                 <ReactionBtn
                   icon={<Flame className="w-4 h-4" />}
                   count={post.reactions.fire}
                   active={post.reacted === "fire"}
-                  activeColor="text-[#e8a84a]"
+                  activeColor="text-accent-gold"
                   onClick={() => toggleReaction(post.id, "fire")}
                 />
                 <ReactionBtn
                   icon={<span className="text-sm leading-none">🤗</span>}
                   count={post.reactions.hug}
                   active={post.reacted === "hug"}
-                  activeColor="text-[#5dbea3]"
+                  activeColor="text-accent-mint"
                   onClick={() => toggleReaction(post.id, "hug")}
                 />
                 <div className="ml-auto flex items-center gap-1.5 text-muted-foreground text-sm">
@@ -435,7 +451,7 @@ export default function App() {
                 />
 
                 {moderationError && (
-                  <p className="text-xs text-[#e8607a] mt-2 bg-[#e8607a]/10 border border-[#e8607a]/30 rounded-lg px-3 py-2">
+                  <p className="text-xs text-accent-rose mt-2 bg-accent-rose/10 border border-accent-rose/30 rounded-lg px-3 py-2">
                     {moderationError}
                   </p>
                 )}

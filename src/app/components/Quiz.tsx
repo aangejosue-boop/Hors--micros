@@ -85,9 +85,9 @@ const QUESTIONS: Question[] = [
 ];
 
 const CATEGORY_COLOR: Record<Question["category"], string> = {
-  Santé: "text-[#5dbea3]",
-  Sport: "text-[#e8a84a]",
-  Culture: "text-[#7c6af5]",
+  Santé: "text-accent-mint",
+  Sport: "text-accent-gold",
+  Culture: "text-accent-violet",
 };
 
 interface QuizProps {
@@ -206,9 +206,9 @@ export default function Quiz({ open, onClose }: QuizProps) {
                       let stateClasses = "bg-secondary text-foreground hover:opacity-80";
                       if (selected !== null) {
                         if (isCorrect) {
-                          stateClasses = "bg-[#5dbea3]/20 border border-[#5dbea3] text-foreground";
+                          stateClasses = "bg-accent-mint/20 border border-accent-mint text-foreground";
                         } else if (isSelected) {
-                          stateClasses = "bg-[#e8607a]/20 border border-[#e8607a] text-foreground";
+                          stateClasses = "bg-accent-rose/20 border border-accent-rose text-foreground";
                         } else {
                           stateClasses = "bg-secondary text-muted-foreground";
                         }
@@ -221,8 +221,8 @@ export default function Quiz({ open, onClose }: QuizProps) {
                           className={`w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl text-sm text-left transition-all ${stateClasses}`}
                         >
                           <span>{choice}</span>
-                          {selected !== null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#5dbea3] flex-shrink-0" />}
-                          {selected !== null && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-[#e8607a] flex-shrink-0" />}
+                          {selected !== null && isCorrect && <CheckCircle2 className="w-4 h-4 text-accent-mint flex-shrink-0" />}
+                          {selected !== null && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-accent-rose flex-shrink-0" />}
                         </button>
                       );
                     })}
