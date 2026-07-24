@@ -92,7 +92,7 @@ export const QUOTES: Quote[] = [
 
 const QUOTES_PER_DAY = 5;
 
-function dayIndex(date = new Date()): number {
+export function dayIndex(date = new Date()): number {
   return Math.floor(date.getTime() / 86400000);
 }
 

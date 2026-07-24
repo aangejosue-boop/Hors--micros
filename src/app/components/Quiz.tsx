@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Brain, RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { dayIndex } from "../data/quotes";
 
 interface Question {
   category: "Santé" | "Sport" | "Culture";
@@ -84,6 +85,23 @@ const QUESTIONS: Question[] = [
   },
 ];
 
+// Mélange déterministe : même ordre pour tout le monde un jour donné, mais un ordre différent chaque jour.
+function seededShuffle<T>(items: T[], seed: number): T[] {
+  const result = [...items];
+  let state = seed;
+  function next() {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  }
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+const DAILY_QUESTIONS = seededShuffle(QUESTIONS, dayIndex());
+
 const CATEGORY_COLOR: Record<Question["category"], string> = {
   Santé: "text-accent-mint",
   Sport: "text-accent-gold",
@@ -101,7 +119,7 @@ export default function Quiz({ open, onClose }: QuizProps) {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
-  const current = QUESTIONS[index];
+  const current = DAILY_QUESTIONS[index];
 
   function choose(choiceIndex: number) {
     if (selected !== null) return;
@@ -112,7 +130,7 @@ export default function Quiz({ open, onClose }: QuizProps) {
   }
 
   function next() {
-    if (index + 1 >= QUESTIONS.length) {
+    if (index + 1 >= DAILY_QUESTIONS.length) {
       setFinished(true);
       return;
     }
@@ -181,14 +199,14 @@ export default function Quiz({ open, onClose }: QuizProps) {
                       {current.category}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {index + 1}/{QUESTIONS.length}
+                      {index + 1}/{DAILY_QUESTIONS.length}
                     </span>
                   </div>
 
                   <div className="w-full h-1 bg-secondary rounded-full overflow-hidden mb-5">
                     <div
                       className="h-full bg-primary transition-all rounded-full"
-                      style={{ width: `${((index + (selected !== null ? 1 : 0)) / QUESTIONS.length) * 100}%` }}
+                      style={{ width: `${((index + (selected !== null ? 1 : 0)) / DAILY_QUESTIONS.length) * 100}%` }}
                     />
                   </div>
 
@@ -233,7 +251,7 @@ export default function Quiz({ open, onClose }: QuizProps) {
                     disabled={selected === null}
                     className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-medium text-sm transition-opacity disabled:opacity-40 hover:opacity-90"
                   >
-                    {index + 1 >= QUESTIONS.length ? "Voir le résultat" : "Question suivante"}
+                    {index + 1 >= DAILY_QUESTIONS.length ? "Voir le résultat" : "Question suivante"}
                   </button>
                 </>
               ) : (
@@ -242,12 +260,12 @@ export default function Quiz({ open, onClose }: QuizProps) {
                     className="text-3xl mb-2"
                     style={{ fontFamily: "'Fraunces', serif", fontStyle: "italic" }}
                   >
-                    {score}/{QUESTIONS.length}
+                    {score}/{DAILY_QUESTIONS.length}
                   </p>
                   <p className="text-sm text-muted-foreground mb-6">
-                    {score === QUESTIONS.length
+                    {score === DAILY_QUESTIONS.length
                       ? "Score parfait, bravo !"
-                      : score >= QUESTIONS.length / 2
+                      : score >= DAILY_QUESTIONS.length / 2
                       ? "Bien joué !"
                       : "Pas mal, retente ta chance !"}
                   </p>
