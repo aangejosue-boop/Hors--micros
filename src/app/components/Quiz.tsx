@@ -64,6 +64,24 @@ const QUESTIONS: Question[] = [
     choices: ["Victor Hugo", "Antoine de Saint-Exupéry", "Albert Camus", "Molière"],
     correct: 1,
   },
+  {
+    category: "Santé",
+    question: "Quel groupe d'aliments est la meilleure source de fibres ?",
+    choices: ["Fruits et légumes", "Charcuterie", "Sodas", "Fritures"],
+    correct: 0,
+  },
+  {
+    category: "Sport",
+    question: "Combien de joueurs compte une équipe de basketball sur le terrain ?",
+    choices: ["4", "5", "6", "7"],
+    correct: 1,
+  },
+  {
+    category: "Culture",
+    question: "Qui a écrit la pièce 'Roméo et Juliette' ?",
+    choices: ["Molière", "Victor Hugo", "William Shakespeare", "Emile Zola"],
+    correct: 2,
+  },
 ];
 
 const CATEGORY_COLOR: Record<Question["category"], string> = {

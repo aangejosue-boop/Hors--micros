@@ -3,35 +3,105 @@ export interface Quote {
   author: string;
 }
 
+// Citations de grands écrivains et penseurs qui ont marqué le monde et l'histoire de leur pays.
 export const QUOTES: Quote[] = [
   { text: "Le plus grand piège de notre esprit, c'est de croire qu'il existe un remède qui ne demande pas d'effort.", author: "Épictète" },
   { text: "On ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux.", author: "Antoine de Saint-Exupéry" },
-  { text: "La vie, c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre.", author: "Albert Einstein" },
   { text: "Il n'y a pas de honte à être faible, la honte n'est que dans le fait de ne pas lutter pour devenir fort.", author: "Bernard Werber" },
   { text: "Ce qui ne me tue pas me rend plus fort.", author: "Friedrich Nietzsche" },
   { text: "L'homme n'est pas fait pour la défaite.", author: "Ernest Hemingway" },
   { text: "Il faut toujours viser la lune, car même en cas d'échec, on atterrit dans les étoiles.", author: "Oscar Wilde" },
   { text: "La solitude, ce n'est pas d'être seul, c'est de se sentir oublié des autres.", author: "Victor Hugo" },
   { text: "Peu importe la lenteur avec laquelle tu avances du moment que tu ne t'arrêtes pas.", author: "Confucius" },
-  { text: "Le bonheur n'est réel que lorsqu'il est partagé.", author: "Christopher McCandless" },
   { text: "On ne guérit pas de son enfance, mais on peut apprendre à vivre avec.", author: "Christian Bobin" },
   { text: "Il n'est pas de vent favorable pour celui qui ne sait où il va.", author: "Sénèque" },
   { text: "La vraie générosité envers l'avenir consiste à tout donner au présent.", author: "Albert Camus" },
   { text: "Au milieu de l'hiver, j'apprenais enfin qu'il y avait en moi un été invincible.", author: "Albert Camus" },
-  { text: "Rien n'est jamais perdu tant qu'il reste quelque chose à trouver.", author: "Pierre Dac" },
   { text: "Le courage, c'est d'aller à l'idéal en comprenant le réel.", author: "Jean Jaurès" },
   { text: "Il faut se hâter de vivre.", author: "Sénèque" },
-  { text: "Le plus difficile n'est pas de se hisser au sommet, mais de savoir redescendre sans tomber.", author: "Confucius" },
   { text: "Tout ce qui ne se transforme pas en lumière devient souffrance.", author: "Marguerite Yourcenar" },
   { text: "La vie est un mystère qu'il faut vivre, et non un problème à résoudre.", author: "Gandhi" },
-  { text: "Écoute le vent, il te raconte une histoire.", author: "Georges Sand" },
   { text: "Nous ne sommes pas seuls quand nous parlons, même à nous-mêmes.", author: "Marguerite Duras" },
   { text: "Il n'y a qu'un bonheur dans la vie, c'est d'aimer et d'être aimé.", author: "George Sand" },
-  { text: "La sagesse ne s'achète pas, elle se cultive avec le temps.", author: "Victor Hugo" },
-  { text: "Un jour, tout ceci ne sera qu'un souvenir. Alors respire.", author: "Anonyme" },
-  { text: "L'important n'est pas de vivre, mais de vivre bien.", author: "Socrate" },
   { text: "Ce que nous appelons le début est souvent la fin. Et faire une fin, c'est faire un début.", author: "T. S. Eliot" },
-  { text: "Un ami, c'est quelqu'un qui vous connaît tel que vous êtes, comprend où vous en êtes, accepte ce que vous êtes devenu.", author: "Elbert Hubbard" },
   { text: "La nuit la plus sombre prend fin, et le soleil se lève toujours.", author: "Victor Hugo" },
-  { text: "Ne laisse jamais quelqu'un te dire que tu ne peux pas faire quelque chose.", author: "Chris Gardner" },
+  { text: "Être ou ne pas être, telle est la question.", author: "William Shakespeare" },
+  { text: "On ne badine pas avec l'amour, mais on peut toujours badiner avec la vie.", author: "Alfred de Musset" },
+  { text: "La beauté sauvera le monde.", author: "Fiodor Dostoïevski" },
+  { text: "Tout le monde pense à changer le monde, mais personne ne pense à se changer soi-même.", author: "Léon Tolstoï" },
+  { text: "L'homme est condamné à être libre.", author: "Jean-Paul Sartre" },
+  { text: "On ne naît pas femme, on le devient.", author: "Simone de Beauvoir" },
+  { text: "Le doute est le commencement de la sagesse.", author: "René Descartes" },
+  { text: "Connais-toi toi-même.", author: "Socrate" },
+  { text: "La vie est courte, l'art est long.", author: "Hippocrate" },
+  { text: "Ce qui compte n'est pas la durée de la vie, mais sa profondeur.", author: "Ralph Waldo Emerson" },
+  { text: "Le succès, c'est tomber sept fois, se relever huit.", author: "Proverbe japonais" },
+  { text: "La vraie sagesse est de reconnaître sa propre ignorance.", author: "Confucius" },
+  { text: "Chaque mur est une porte.", author: "Ralph Waldo Emerson" },
+  { text: "L'imagination est plus importante que le savoir.", author: "Albert Einstein" },
+  { text: "Ne raccourcis pas ton été. La vie est trop précieuse.", author: "Maya Angelou" },
+  { text: "On ne perd jamais tant qu'on continue d'essayer.", author: "Mark Twain" },
+  { text: "Dans vingt ans, tu seras plus déçu par les choses que tu n'as pas faites que par celles que tu as faites.", author: "Mark Twain" },
+  { text: "Aie le courage de suivre ton cœur et ton intuition.", author: "Steve Jobs" },
+  { text: "Ce que l'on conçoit bien s'énonce clairement.", author: "Nicolas Boileau" },
+  { text: "Il n'y a de vent favorable que pour celui qui sait où il va.", author: "Michel de Montaigne" },
+  { text: "L'homme est né libre, et partout il est dans les fers.", author: "Jean-Jacques Rousseau" },
+  { text: "Le travail éloigne de nous trois grands maux : l'ennui, le vice et le besoin.", author: "Voltaire" },
+  { text: "Il faut cultiver notre jardin.", author: "Voltaire" },
+  { text: "La musique est la vapeur de l'art. Elle est à la poésie ce que la rêverie est à la pensée.", author: "Victor Hugo" },
+  { text: "Deviens ce que tu es.", author: "Pindare" },
+  { text: "Le génie, c'est un pour cent d'inspiration et quatre-vingt-dix-neuf pour cent de transpiration.", author: "Thomas Edison" },
+  { text: "Nous sommes tous nés ignorants, mais il faut travailler dur pour rester stupide.", author: "Benjamin Franklin" },
+  { text: "Un livre est un rêve que tu tiens dans tes mains.", author: "Neil Gaiman" },
+  { text: "L'amour ne consiste pas à se regarder l'un l'autre, mais à regarder ensemble dans la même direction.", author: "Antoine de Saint-Exupéry" },
+  { text: "La liberté commence où l'ignorance finit.", author: "Victor Hugo" },
+  { text: "Il n'y a qu'une héroïsme au monde : voir le monde tel qu'il est et l'aimer.", author: "Romain Rolland" },
+  { text: "Aimer, c'est agir.", author: "Victor Hugo" },
+  { text: "Écris ce que tu ne peux pas dire à voix haute.", author: "Rainer Maria Rilke" },
+  { text: "L'homme est un apprenti, la douleur est son maître.", author: "Alfred de Musset" },
+  { text: "Nul ne se baigne deux fois dans le même fleuve.", author: "Héraclite" },
+  { text: "Le silence est la langue de Dieu, tout le reste est une mauvaise traduction.", author: "Rumi" },
+  { text: "Ce que tu cherches te cherche aussi.", author: "Rumi" },
+  { text: "Que ton cœur soit rempli d'émerveillement, mais que tes yeux voient de vieilles choses comme nouvelles.", author: "Rabindranath Tagore" },
+  { text: "Ce n'est pas la mort qu'un homme devrait craindre, mais il devrait craindre de n'avoir jamais commencé à vivre.", author: "Marc Aurèle" },
+  { text: "Le passé et le futur n'existent pas vraiment. Il n'y a que le présent.", author: "Rumi" },
+  { text: "L'écriture est la peinture de la voix.", author: "Voltaire" },
+  { text: "Les livres sont des amis froids et sûrs.", author: "Victor Hugo" },
+  { text: "Il vaut mieux allumer une bougie que maudire l'obscurité.", author: "Confucius" },
+  { text: "La vie n'est pas d'attendre que les orages passent, c'est d'apprendre à danser sous la pluie.", author: "Sénèque" },
+  { text: "Le talent, c'est d'avoir envie de faire ce que l'on fait.", author: "Charles Baudelaire" },
+  { text: "Le poète est semblable au prince des nuées, qui hante la tempête et se rit de l'archer.", author: "Charles Baudelaire" },
+  { text: "Il faut être absolument moderne.", author: "Arthur Rimbaud" },
+  { text: "Je est un autre.", author: "Arthur Rimbaud" },
+  { text: "L'amitié double les joies et réduit de moitié les peines.", author: "Francis Bacon" },
+  { text: "Un peuple qui a de grands écrivains est un peuple qui a une grande histoire.", author: "Alexandre Soljenitsyne" },
+  { text: "L'art de la sagesse est l'art de savoir quoi ignorer.", author: "William James" },
+  { text: "Rien de grand ne s'est jamais accompli sans enthousiasme.", author: "Ralph Waldo Emerson" },
+  { text: "La solitude est le prix à payer pour être né dans un siècle trop conscient de soi-même.", author: "Jean-Paul Sartre" },
+  { text: "Cent ans de solitude n'ont pas suffi à briser l'attachement d'un peuple à sa mémoire.", author: "Gabriel García Márquez" },
+  { text: "Le bonheur, pour être complet, doit être partagé.", author: "Pablo Neruda" },
+  { text: "Tu peux me priver de tout ce qui fait ma vie, sauf de ma dernière liberté, celle de choisir mon attitude.", author: "Viktor Frankl" },
+  { text: "L'éducation est l'arme la plus puissante pour changer le monde.", author: "Nelson Mandela" },
+  { text: "Il semble toujours impossible, jusqu'à ce que ce soit fait.", author: "Nelson Mandela" },
+  { text: "Nous ne sommes pas ce que les circonstances font de nous, mais ce que nous décidons d'en faire.", author: "Chinua Achebe" },
+  { text: "Chaque grand écrivain sauve, un peu, le monde de sa propre langue.", author: "Milan Kundera" },
+  { text: "La légèreté de l'être n'est pas seulement insoutenable, elle est aussi précieuse.", author: "Milan Kundera" },
+  { text: "L'homme est le seul animal qui puisse se lier par des promesses.", author: "Friedrich Nietzsche" },
+  { text: "Deviens qui tu es.", author: "Friedrich Nietzsche" },
 ];
+
+const QUOTES_PER_DAY = 5;
+
+function dayIndex(date = new Date()): number {
+  return Math.floor(date.getTime() / 86400000);
+}
+
+export function todaysQuotes(count: number = QUOTES_PER_DAY): Quote[] {
+  const total = QUOTES.length;
+  const start = (dayIndex() * count) % total;
+  const result: Quote[] = [];
+  for (let i = 0; i < count; i++) {
+    result.push(QUOTES[(start + i) % total]);
+  }
+  return result;
+}
