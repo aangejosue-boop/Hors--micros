@@ -46,3 +46,42 @@ grant execute on function toggle_reaction(bigint, text, int) to anon, authentica
 
 -- Realtime : permet à l'app de recevoir les nouveaux messages en direct.
 alter publication supabase_realtime add table messages;
+
+-- Modération : verrou côté base de données (empêche de contourner le filtre
+-- côté client en appelant directement l'API). Liste non exhaustive de mots-clés.
+create extension if not exists unaccent;
+
+create or replace function reject_inappropriate_content()
+returns trigger
+language plpgsql
+as $$
+declare
+  banned text[] := array[
+    'connard','connasse','encule','enculee','enfoire','enfoiree','salope','pute',
+    'batard','abruti','debile mental','sous-merde','ordure','ntm',
+    'nique ta mere','nique sa mere','ta gueule','gros porc',
+    'sale race','sale arabe','sale noir','sale juif','sale musulman','bougnoule',
+    'negro','negre','chinetoque','youpin','feuj','pede','sale pd','tapette','gouine',
+    'sale gitan','sale rom','sous-race','race inferieure',
+    'je vais te tuer','je vais te violer','tu merites de mourir','tu devrais mourir',
+    'il faut les exterminer','il faut tous les tuer',
+    'envoie des nudes','envoie moi des nudes','photo de sexe','viol','pedophile',
+    'pedopornographie','je veux te violer','sexe avec un enfant'
+  ];
+  normalized text;
+  term text;
+begin
+  normalized := lower(unaccent(new.content));
+  foreach term in array banned loop
+    if normalized like '%' || term || '%' then
+      raise exception 'Contenu non autorisé détecté';
+    end if;
+  end loop;
+  return new;
+end;
+$$;
+
+drop trigger if exists messages_moderation on messages;
+create trigger messages_moderation
+  before insert on messages
+  for each row execute function reject_inappropriate_content();

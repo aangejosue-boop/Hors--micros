@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Heart, MessageCircle, Flame, Shield, ChevronDown, X, Plus, Brain } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { supabase, type MessageRow } from "@/lib/supabase";
+import { isContentAllowed, MODERATION_WARNING } from "@/lib/moderation";
 import Quiz from "./components/Quiz";
 import OnboardingTips from "./components/OnboardingTips";
 import QuoteOfTheDay from "./components/QuoteOfTheDay";
@@ -81,6 +82,7 @@ export default function App() {
   const [draft, setDraft] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [charCount, setCharCount] = useState(0);
+  const [moderationError, setModerationError] = useState<string | null>(null);
   const [reactedMap, setReactedMap] = useState<Record<number, keyof Reaction>>({});
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const seenIds = useRef<Set<number>>(new Set());
@@ -179,6 +181,13 @@ export default function App() {
 
   async function submitPost() {
     if (!draft.trim()) return;
+
+    if (!isContentAllowed(draft)) {
+      setModerationError(MODERATION_WARNING);
+      return;
+    }
+    setModerationError(null);
+
     const { data, error } = await supabase
       .from("messages")
       .insert({
@@ -191,6 +200,11 @@ export default function App() {
 
     if (error) {
       console.error("Erreur de publication :", error.message);
+      setModerationError(
+        error.message.toLowerCase().includes("non autorisé")
+          ? MODERATION_WARNING
+          : "Une erreur est survenue, réessaie."
+      );
       return;
     }
 
@@ -411,6 +425,7 @@ export default function App() {
                     if (e.target.value.length <= MAX) {
                       setDraft(e.target.value);
                       setCharCount(e.target.value.length);
+                      setModerationError(null);
                     }
                   }}
                   placeholder="Partage ce que tu vis, ce que tu ressens… personne ne saura que c'est toi."
@@ -418,6 +433,12 @@ export default function App() {
                   style={{ fontFamily: "'Fraunces', serif", fontWeight: 300, minHeight: "120px" }}
                   rows={5}
                 />
+
+                {moderationError && (
+                  <p className="text-xs text-[#e8607a] mt-2 bg-[#e8607a]/10 border border-[#e8607a]/30 rounded-lg px-3 py-2">
+                    {moderationError}
+                  </p>
+                )}
 
                 <div className="flex items-center justify-between mt-1 mb-4">
                   <span className="text-xs text-muted-foreground">
