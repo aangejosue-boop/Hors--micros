@@ -1,3 +1,5 @@
+import { dailySubset } from "../../lib/daily";
+
 export interface Quote {
   text: string;
   author: string;
@@ -92,16 +94,6 @@ export const QUOTES: Quote[] = [
 
 const QUOTES_PER_DAY = 5;
 
-export function dayIndex(date = new Date()): number {
-  return Math.floor(date.getTime() / 86400000);
-}
-
 export function todaysQuotes(count: number = QUOTES_PER_DAY): Quote[] {
-  const total = QUOTES.length;
-  const start = (dayIndex() * count) % total;
-  const result: Quote[] = [];
-  for (let i = 0; i < count; i++) {
-    result.push(QUOTES[(start + i) % total]);
-  }
-  return result;
+  return dailySubset(QUOTES, count);
 }

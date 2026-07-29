@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X, Brain, RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { dayIndex } from "../data/quotes";
+import { dayIndex, dailySubset, seededShuffle } from "../../lib/daily";
 
 interface Question {
   category: "Santé" | "Sport" | "Culture";
@@ -83,24 +83,137 @@ const QUESTIONS: Question[] = [
     choices: ["Molière", "Victor Hugo", "William Shakespeare", "Emile Zola"],
     correct: 2,
   },
+  {
+    category: "Santé",
+    question: "Combien de fois par semaine est-il recommandé de faire du sport pour rester en forme ?",
+    choices: ["Jamais", "1 fois", "Au moins 3 fois", "Tous les jours sans exception"],
+    correct: 2,
+  },
+  {
+    category: "Santé",
+    question: "Quelle vitamine le corps produit-il principalement grâce au soleil ?",
+    choices: ["Vitamine C", "Vitamine D", "Vitamine B12", "Vitamine K"],
+    correct: 1,
+  },
+  {
+    category: "Santé",
+    question: "Quel est le muscle le plus volumineux du corps humain ?",
+    choices: ["Le biceps", "Le grand fessier", "Le triceps", "Le mollet"],
+    correct: 1,
+  },
+  {
+    category: "Santé",
+    question: "Combien de temps dure en moyenne un cycle de sommeil ?",
+    choices: ["30 minutes", "90 minutes", "3 heures", "15 minutes"],
+    correct: 1,
+  },
+  {
+    category: "Santé",
+    question: "Quel geste simple aide à calmer l'anxiété en quelques secondes ?",
+    choices: ["Retenir sa respiration", "Expirer plus longtemps qu'on inspire", "Respirer très vite", "Serrer les poings fort"],
+    correct: 1,
+  },
+  {
+    category: "Santé",
+    question: "Quel organe filtre le sang pour éliminer les déchets ?",
+    choices: ["Le foie", "Les reins", "L'estomac", "La rate"],
+    correct: 1,
+  },
+  {
+    category: "Santé",
+    question: "Quelle habitude simple améliore la circulation sanguine au quotidien ?",
+    choices: ["Marcher régulièrement", "Rester assis toute la journée", "Sauter des repas", "Multiplier les écrans"],
+    correct: 0,
+  },
+  {
+    category: "Sport",
+    question: "Combien de joueurs compose une équipe de football sur le terrain ?",
+    choices: ["9", "10", "11", "12"],
+    correct: 2,
+  },
+  {
+    category: "Sport",
+    question: "Dans quel sport utilise-t-on le terme 'ace' ?",
+    choices: ["Tennis", "Football", "Natation", "Escrime"],
+    correct: 0,
+  },
+  {
+    category: "Sport",
+    question: "Dans quel pays le judo a-t-il été inventé ?",
+    choices: ["Chine", "Japon", "Corée du Sud", "Thaïlande"],
+    correct: 1,
+  },
+  {
+    category: "Sport",
+    question: "Combien de temps dure un match de basketball NBA, hors prolongations ?",
+    choices: ["40 minutes", "48 minutes", "60 minutes", "90 minutes"],
+    correct: 1,
+  },
+  {
+    category: "Sport",
+    question: "Quel sport combine planche et voile ?",
+    choices: ["Surf", "Planche à voile", "Skateboard", "Snowboard"],
+    correct: 1,
+  },
+  {
+    category: "Sport",
+    question: "Combien de sets faut-il gagner pour remporter un match de tennis en 3 sets gagnants ?",
+    choices: ["1", "2", "3", "4"],
+    correct: 1,
+  },
+  {
+    category: "Sport",
+    question: "Quelle nage est considérée comme la plus rapide en natation ?",
+    choices: ["La brasse", "Le dos crawlé", "La nage libre (crawl)", "Le papillon"],
+    correct: 2,
+  },
+  {
+    category: "Culture",
+    question: "Qui a peint la Joconde ?",
+    choices: ["Michel-Ange", "Léonard de Vinci", "Raphaël", "Botticelli"],
+    correct: 1,
+  },
+  {
+    category: "Culture",
+    question: "Dans quel pays se trouve la tour de Pise ?",
+    choices: ["Espagne", "Italie", "Grèce", "Portugal"],
+    correct: 1,
+  },
+  {
+    category: "Culture",
+    question: "Qui a écrit 'Les Misérables' ?",
+    choices: ["Victor Hugo", "Émile Zola", "Gustave Flaubert", "Alexandre Dumas"],
+    correct: 0,
+  },
+  {
+    category: "Culture",
+    question: "Quelle est la capitale du Japon ?",
+    choices: ["Séoul", "Pékin", "Tokyo", "Bangkok"],
+    correct: 2,
+  },
+  {
+    category: "Culture",
+    question: "Qui a composé 'La Flûte enchantée' ?",
+    choices: ["Beethoven", "Mozart", "Bach", "Chopin"],
+    correct: 1,
+  },
+  {
+    category: "Culture",
+    question: "Dans quelle mythologie trouve-t-on le dieu Zeus ?",
+    choices: ["Égyptienne", "Grecque", "Nordique", "Romaine"],
+    correct: 1,
+  },
+  {
+    category: "Culture",
+    question: "Quel peintre est connu pour s'être coupé une partie de l'oreille ?",
+    choices: ["Pablo Picasso", "Vincent van Gogh", "Claude Monet", "Edvard Munch"],
+    correct: 1,
+  },
 ];
 
-// Mélange déterministe : même ordre pour tout le monde un jour donné, mais un ordre différent chaque jour.
-function seededShuffle<T>(items: T[], seed: number): T[] {
-  const result = [...items];
-  let state = seed;
-  function next() {
-    state = (state * 1664525 + 1013904223) >>> 0;
-    return state / 4294967296;
-  }
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(next() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
+const QUESTIONS_PER_DAY = 8;
 
-const DAILY_QUESTIONS = seededShuffle(QUESTIONS, dayIndex());
+const DAILY_QUESTIONS = seededShuffle(dailySubset(QUESTIONS, QUESTIONS_PER_DAY), dayIndex());
 
 const CATEGORY_COLOR: Record<Question["category"], string> = {
   Santé: "text-accent-mint",
