@@ -53,6 +53,7 @@ function randomAlias() {
 
 const REACTED_STORAGE_KEY = "hors-micro-reactions";
 const THEME_STORAGE_KEY = "hors-micro-theme";
+const DUPLICATE_WARNING = "Tu as déjà publié ce message il y a peu, inutile de le renvoyer.";
 
 function loadReactedMap(): Record<number, keyof Reaction> {
   try {
@@ -84,6 +85,7 @@ export default function App() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [charCount, setCharCount] = useState(0);
   const [moderationError, setModerationError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [reactedMap, setReactedMap] = useState<Record<number, keyof Reaction>>({});
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -189,41 +191,49 @@ export default function App() {
   }
 
   async function submitPost() {
-    if (!draft.trim()) return;
+    if (!draft.trim() || isSubmitting) return;
 
     if (!isContentAllowed(draft)) {
       setModerationError(MODERATION_WARNING);
       return;
     }
     setModerationError(null);
+    setIsSubmitting(true);
 
-    const { data, error } = await supabase
-      .from("messages")
-      .insert({
-        content: draft.trim(),
-        tags: selectedTags.length ? selectedTags : ["vie-scolaire"],
-        alias: randomAlias(),
-      })
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("messages")
+        .insert({
+          content: draft.trim(),
+          tags: selectedTags.length ? selectedTags : ["vie-scolaire"],
+          alias: randomAlias(),
+        })
+        .select()
+        .single();
 
-    if (error) {
-      console.error("Erreur de publication :", error.message);
-      setModerationError(
-        error.message.toLowerCase().includes("non autorisé")
-          ? MODERATION_WARNING
-          : "Une erreur est survenue, réessaie."
-      );
-      return;
+      if (error) {
+        console.error("Erreur de publication :", error.message);
+        const msg = error.message.toLowerCase();
+        setModerationError(
+          msg.includes("non autorisé")
+            ? MODERATION_WARNING
+            : msg.includes("déjà été publié")
+            ? DUPLICATE_WARNING
+            : "Une erreur est survenue, réessaie."
+        );
+        return;
+      }
+
+      const row = data as MessageRow;
+      seenIds.current.add(row.id);
+      setPosts((prev) => [rowToPost(row), ...prev]);
+      setDraft("");
+      setSelectedTags([]);
+      setCharCount(0);
+      setComposeOpen(false);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const row = data as MessageRow;
-    seenIds.current.add(row.id);
-    setPosts((prev) => [rowToPost(row), ...prev]);
-    setDraft("");
-    setSelectedTags([]);
-    setCharCount(0);
-    setComposeOpen(false);
   }
 
   function toggleTag(id: string) {
@@ -494,11 +504,11 @@ export default function App() {
 
                 <button
                   onClick={submitPost}
-                  disabled={!draft.trim()}
+                  disabled={!draft.trim() || isSubmitting}
                   className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-medium text-sm transition-opacity disabled:opacity-40 hover:opacity-90"
                 >
                   <Send className="w-4 h-4" />
-                  Publier anonymement
+                  {isSubmitting ? "Publication..." : "Publier anonymement"}
                 </button>
               </div>
             </motion.div>

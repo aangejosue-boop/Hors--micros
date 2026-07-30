@@ -126,3 +126,29 @@ drop trigger if exists messages_moderation on messages;
 create trigger messages_moderation
   before insert on messages
   for each row execute function reject_inappropriate_content();
+
+-- Anti-doublon : empêche qu'un même message publié par erreur plusieurs fois
+-- de suite (double-clic, mauvaise connexion...) ne se retrouve dupliqué dans
+-- la base. Comparaison sur le texte exact, limitée aux publications récentes
+-- pour ne pas bloquer pour toujours une phrase qu'un autre visiteur écrirait
+-- coïncidemment plus tard.
+create or replace function reject_duplicate_content()
+returns trigger
+language plpgsql
+as $$
+begin
+  if exists (
+    select 1 from messages
+    where content = new.content
+      and created_at > now() - interval '24 hours'
+  ) then
+    raise exception 'Ce message a déjà été publié récemment.';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists messages_dedup on messages;
+create trigger messages_dedup
+  before insert on messages
+  for each row execute function reject_duplicate_content();
