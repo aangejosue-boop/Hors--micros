@@ -81,8 +81,8 @@ declare
     'connard','connasse','connarde','con de','encule','enculee',
     'enfoire','enfoiree','salope','salopard','pute','putain de','fils de pute',
     'batard','abruti','abrutie','debile mental','attarde','attardee',
-    'sous-merde','merdeux','merdeuse','ordure','raclure','fdp','ntm',
-    'nique ta mere','nique sa mere','va crever','va te faire','ferme ta gueule',
+    'sous-merde','merdeux','merdeuse','ordure','raclure',
+    'nique ta mere','nique sa mere','va crever','ferme ta gueule',
     'ta gueule','gros porc','sac a merde',
 
     -- Haine / discrimination
@@ -90,24 +90,6 @@ declare
     'bougnoule','negro','negre','chinetoque','youpin','feuj',
     'pede','sale pd','tapette','gouine','sale gitan','sale rom',
     'sous-race','race inferieure','vous etes tous des','retournez dans votre pays',
-
-    -- Menaces / incitation à la violence ou à la haine
-    'je vais te tuer','je vais te violer','tu merites de mourir','tu devrais mourir',
-    'vous devriez tous mourir','il faut les exterminer','il faut tous les tuer',
-    'je vais te defoncer','je vais te retrouver',
-
-    -- Contenu sexuel explicite / sollicitation
-    'sexe explicite','envoie des nudes','envoie moi des nudes','envoie une nude',
-    'photo de sexe','photo de toi nue','photo de toi nu','plan cul','sexto',
-    'montre moi tes seins','montre moi ton sexe',
-    'viol','violer quelqu''un','je veux te violer',
-
-    -- Contenu impliquant des mineurs (priorité absolue : tolérance zéro)
-    'pedophile','pedophilie','pedopornographie','pedoporn','lolicon',
-    'relation sexuelle avec un mineur','relation sexuelle avec une mineure',
-    'relations sexuelles avec des enfants','sexe avec un enfant','sexe avec une enfant',
-    'sexe avec un mineur','sexe avec une mineure','nue mineure','nu mineur',
-    'envoie des nudes mineure','photo nue mineure','attirance pour les enfants'
   ];
   normalized_content text;
   term text;

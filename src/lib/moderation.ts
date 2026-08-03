@@ -1,7 +1,3 @@
-// Filtre basique par liste de mots-clés : bloque les insultes, propos haineux
-// et contenu sexuel explicite les plus courants avant publication.
-// Limite assumée : ne comprend pas le sens d'une phrase, seulement des mots/expressions.
-
 const BANNED_TERMS = [
   // Insultes courantes
   "connard", "connasse", "connarde", "con de", "enculé", "enculée",
@@ -37,11 +33,17 @@ const BANNED_TERMS = [
   "envoie des nudes mineure", "photo nue mineure", "attirance pour les enfants",
 ];
 
-// Retire tout caractère qui n'est pas une lettre (espaces, ponctuation, emojis...).
-// Sans ça, "c o n n a r d" ou "c.o.n.n.a.r.d" passait au travers du filtre car la
-// comparaison se fait par sous-chaîne : il faut que les lettres se retrouvent
-// bord à bord des deux côtés de la comparaison pour matcher, contournement sinon.
-function normalize(text: string): string {
+// Longueur en dessous de laquelle un terme est considéré "court" et donc
+// dangereux en comparaison "sous-chaîne libre" (risque de faux positif par
+// collision entre deux mots voisins, ex: "dura[nt m]on" -> "ntm").
+// Ces termes courts sont comparés comme des MOTS ENTIERS uniquement.
+const SHORT_TERM_THRESHOLD = 4;
+
+// Normalise le texte en OTANT les accents / leetspeak, mais en remplaçant
+// la ponctuation et les espaces par un unique espace (au lieu de les
+// supprimer). Ça garde les frontières de mots intactes pour la détection
+// "mot entier", tout en neutralisant les emojis/ponctuation parasites.
+function normalizeKeepWordBoundaries(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
@@ -54,15 +56,42 @@ function normalize(text: string): string {
     .replace(/7/g, "t")
     .replace(/@/g, "a")
     .replace(/\$/g, "s")
-    .replace(/[^a-z]/g, "")
+    .replace(/[^a-z]+/g, " ") // tout non-lettre devient un espace (au lieu d'être supprimé)
+    .trim()
     .replace(/(.)\1{2,}/g, "$1$1"); // "coooonnard" -> "coonnard"
 }
 
+// Version "collée" (sans aucun espace) réservée aux termes longs, pour
+// continuer à attraper les contournements du type "c o n n a r d" ou
+// "c.o.n.n.a.r.d" — acceptable pour les termes longs car le risque de
+// collision accidentelle entre deux mots voisins diminue avec la longueur.
+function normalizeCollapsed(text: string): string {
+  return normalizeKeepWordBoundaries(text).replace(/ /g, "");
+}
+
 export function findBannedTerm(text: string): string | null {
-  const normalized = normalize(text);
+  const withBoundaries = normalizeKeepWordBoundaries(text);
+  const words = withBoundaries.split(" ").filter(Boolean);
+  const wordSet = new Set(words);
+  const collapsed = withBoundaries.replace(/ /g, "");
+
   for (const term of BANNED_TERMS) {
-    if (normalized.includes(normalize(term))) {
-      return term;
+    const normalizedTerm = normalizeCollapsed(term);
+
+    if (normalizedTerm.length <= SHORT_TERM_THRESHOLD && !term.includes(" ")) {
+      // Terme court et composé d'un seul mot ("ntm", "fdp", "con"...) :
+      // on exige une correspondance de MOT ENTIER pour éviter les faux
+      // positifs de jonction ("durant mon" ne doit pas matcher "ntm").
+      if (wordSet.has(normalizedTerm)) {
+        return term;
+      }
+    } else {
+      // Terme long ou expression à plusieurs mots : comparaison en
+      // sous-chaîne sur la version collée, pour garder la protection
+      // anti-contournement ("c o n n a r d", "c.o.n.n.a.r.d"...).
+      if (collapsed.includes(normalizedTerm)) {
+        return term;
+      }
     }
   }
   return null;
